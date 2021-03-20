@@ -22,14 +22,12 @@ def getAccountInformation():
     
 
 def getStockInformation(stock):
-    # TODO here
-    # fetch information about the stock given as a parameter
-    # return stock information in dictionary
-    # example dictionary structure might be something like
+    # get yesterday's date at 09:00 CST time
     yesterday = datetime.now() - timedelta(1)
     calendarDate = datetime.strftime(yesterday, '%Y-%m-%d')
-    targetStart = '{}T14:00:01Z'.format(calendarDate)
+    targetStart = '{}T14:00:01Z'.format(calendarDate) # 14:00 UTC is 09:00 CST
     targetEnd = '{}T14:10:00Z'.format(calendarDate)
+
     url = "{}/v2/stocks/{}/trades?start={}&end={}&limit=1".format(end_point_for_data, stock.upper(), targetStart, targetEnd)
     headers = {
         "APCA-API-KEY-ID": api_key,
