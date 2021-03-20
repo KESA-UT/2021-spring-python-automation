@@ -1,8 +1,10 @@
 import os
 import requests
 import json
+from datetime import datetime, timedelta
 
 end_point = os.environ['alpaca_end_point']
+end_point_for_data = os.environ['alpaca_end_point_for_data']
 api_key = os.environ['alpaca_api_key']
 secret_key = os.environ['alpaca_secret_key']
 
@@ -24,18 +26,18 @@ def getStockInformation(stock):
     # fetch information about the stock given as a parameter
     # return stock information in dictionary
     # example dictionary structure might be something like
-    '''
-    {
-        "name": "google",
-        "price": 2056,
-        "date": "2021-03-09"
+    yesterday = datetime.now() - timedelta(1)
+    calendarDate = datetime.strftime(yesterday, '%Y-%m-%d')
+    targetStart = '{}T14:00:01Z'.format(calendarDate)
+    targetEnd = '{}T14:10:00Z'.format(calendarDate)
+    url = "{}/v2/stocks/{}/trades?start={}&end={}&limit=1".format(end_point_for_data, stock.upper(), targetStart, targetEnd)
+    headers = {
+        "APCA-API-KEY-ID": api_key,
+        "APCA-API-SECRET-KEY": secret_key
     }
-    '''
-    return {
-        "name": stock,
-        "price": 123,
-        "date": "2021-03-09"
-    }
+    r = requests.get(url, headers=headers)
+    res = json.loads(r.text)
+    return res
 
 def displayInformation(accountInfo, stockInfos):
     # display account information
@@ -46,13 +48,15 @@ def displayInformation(accountInfo, stockInfos):
 
     # TODO: display stock information
     print("Stock Information:")
-    print("  TODO: display stock information")
+    for info in stockInfos:
+        print("  {}:".format(info["symbol"]))
+        print("    price: ${}".format(info["trades"][0]["p"]))
     
 
 
 def main():
     accountInfo = getAccountInformation()
-    stocks = ['Google', 'Apple', 'Facebook', 'Microsoft', 'Amazon']
+    stocks = ['googl', 'aapl', 'fb', 'msft', 'amzn']
     stockInfos = []
     for stock in stocks:
         stockInfo = getStockInformation(stock)
