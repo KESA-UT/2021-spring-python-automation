@@ -3,8 +3,8 @@ import requests
 import json
 from datetime import datetime, timedelta
 
-end_point = os.environ['alpaca_end_point']
-end_point_for_data = os.environ['alpaca_end_point_for_data']
+end_point = os.environ['alpaca_end_point'] # https://paper-api.alpaca.markets
+end_point_for_data = os.environ['alpaca_end_point_for_data'] # https://data.alpaca.markets
 api_key = os.environ['alpaca_api_key']
 secret_key = os.environ['alpaca_secret_key']
 
